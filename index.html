@@ -1,30 +1,37 @@
 <!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GoJar</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <nav>
-      <img src="logo.png" alt="Go Jar Logo" />
-      <h1>GoJar</h1>
-    </nav>
-    <footer>
-      <i class="material-icons">exit_to_app</i>
-      <i class="material-icons">insights</i>
-      <i class="material-icons">format_list_bulleted</i>
-    </footer>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoJar</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+  <nav>
+    <img src="logo.png" alt="Go Jar Logo" />
+    <h1>GoJar</h1>
+  </nav>
+  <section id="login" data-target="exit_to_app">
+    <h2>Login</h2>
+  </section>
+  <section id="graph" data-target="insights">
+    <h2>Graph</h2>
+  </section>
+  <section id="stats" data-target="format_list_bulleted">
+    <h2>Stats</h2>
+  </section>
+  <footer>
+    <i class="material-icons">exit_to_app</i>
+    <i class="material-icons">insights</i>
+    <i class="material-icons">format_list_bulleted</i>
+  </footer>
+  <script src="index.js"></script>
+</body>
+
 </html>

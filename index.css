@@ -10,7 +10,7 @@ body {
   background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='%23ffffffff'/><path d='M0 10h20z'   stroke-width='1' stroke='%2396c7cfff' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
 }
 
-nav > img {
+nav>img {
   height: 100px;
   object-fit: contain;
   margin: 20px 10px;
@@ -24,7 +24,7 @@ nav {
   border-bottom: 3px solid #00002a;
 }
 
-nav > h1 {
+nav>h1 {
   font-weight: 500;
   font-size: 34pt;
   color: #00002a;
@@ -49,4 +49,13 @@ footer {
 
 .material-icons:hover {
   color: #96c7cf;
+}
+
+.material-icons.active {
+  color: #96c7cf;
+}
+
+section {
+  display: none;
+  padding-bottom: 100px;
 }
