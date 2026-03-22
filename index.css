@@ -145,7 +145,8 @@ section li {
 .edit {
   width: fit-content;
   display: flex;
-  gap: 5px;
+  align-items: self-start;
+  margin: 6.5px 0 0 10px;
 }
 
 .freq {
