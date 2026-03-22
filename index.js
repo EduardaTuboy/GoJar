@@ -2,11 +2,17 @@ function initNavigation() {
     const icons = document.querySelectorAll("footer i");
     const sections = document.querySelectorAll("section");
 
-    // Inicializar: mostrar primeira seção e marcar primeiro ícone como ativo
+    // Inicializar: mostrar Stats para debug
     if (icons.length > 0 && sections.length > 0) {
-        icons[0].classList.add("active");
-        sections.forEach((section, index) => {
-            section.style.display = index === 0 ? "block" : "none";
+        const statsSection = document.querySelector("#stats");
+        const statsIcon = Array.from(icons).find(icon => icon.textContent.trim() === statsSection.dataset.target);
+
+        sections.forEach((section) => {
+            section.style.display = section.id === "stats" ? "block" : "none";
+        });
+
+        icons.forEach((icon) => {
+            icon.classList.toggle("active", icon === statsIcon);
         });
     }
 

@@ -1,0 +1,49 @@
+{
+    "stats": [
+        {
+            "titulo": "Entradas",
+            "itens": [
+                {
+                    "nome": "Entrada1",
+                    "preco": "500,00",
+                    "freq": "/mes"
+                },
+                {
+                    "nome": "Entrada2",
+                    "preco": "200,00",
+                    "freq": "/mes"
+                }
+            ]
+        },
+        {
+            "titulo": "Saídas",
+            "itens": [
+                {
+                    "nome": "Saída1",
+                    "preco": "500,00",
+                    "freq": "/mes"
+                },
+                {
+                    "nome": "Saída2",
+                    "preco": "500,00",
+                    "freq": "/mes"
+                }
+            ]
+        },
+        {
+            "titulo": "Metas",
+            "itens": [
+                {
+                    "nome": "Meta1",
+                    "preco": "500,00",
+                    "freq": "/mes"
+                },
+                {
+                    "nome": "Meta2",
+                    "preco": "500,00",
+                    "freq": "/mes"
+                }
+            ]
+        }
+    ]
+}
