@@ -2,6 +2,7 @@
   /* Colors */
   --bg: #f5f5f5;
   --text: #00002a;
+  --text2: #9f9fa1;
   --hl: #96c7cf;
   --box: #ffffff;
 }
@@ -109,14 +110,13 @@ section h3 {
 section ul {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 10px;
   list-style-type: none;
 
   font-size: 15pt;
 
   background-color: var(--box);
 
-  padding: 20px;
+  padding: 10px 20px 10px 10px;
   margin: 0;
   border-radius: 30px;
 
@@ -146,6 +146,13 @@ section li {
   width: fit-content;
   display: flex;
   gap: 5px;
+}
+
+.freq {
+  grid-column: 1 / -1;
+  font-size: 10pt;
+  color: var(--text2);
+  margin-top: -15px;
 }
 
 section .add {
