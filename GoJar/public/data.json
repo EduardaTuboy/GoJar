@@ -1,0 +1,93 @@
+{
+    "entradas": [
+        {
+            "id": "1",
+            "nome": "Salário",
+            "valor": 5000.50,
+            "frequencia": "mensal",
+            "dia": 5,
+            "ativo": true
+        },
+        {
+            "id": "2",
+            "nome": "Freelance",
+            "valor": 1250.75,
+            "frequencia": "mensal",
+            "dia": 15,
+            "ativo": true
+        },
+        {
+            "id": "3",
+            "nome": "Aluguel de Quarto",
+            "valor": 450.00,
+            "frequencia": "mensal",
+            "dia": 10,
+            "ativo": true
+        },
+        {
+            "id": "4",
+            "nome": "Aluguel de Quarto",
+            "valor": 330.00,
+            "frequencia": "mensal",
+            "dia": 10,
+            "ativo": true
+        }
+    ],
+    "saidas": [
+        {
+            "id": "1",
+            "nome": "Aluguel",
+            "valor": 1500.00,
+            "frequencia": "mensal",
+            "dia": 1,
+            "ativo": true
+        },
+        {
+            "id": "2",
+            "nome": "Internet",
+            "valor": 99.90,
+            "frequencia": "mensal",
+            "dia": 5,
+            "ativo": true
+        },
+        {
+            "id": "3",
+            "nome": "Supermercado",
+            "valor": 450.30,
+            "frequencia": "semanal",
+            "dia": 0,
+            "ativo": true
+        },
+        {
+            "id": "4",
+            "nome": "Café da Manhã",
+            "valor": 12.50,
+            "frequencia": "diária",
+            "dia": 0,
+            "ativo": true
+        }
+    ],
+    "metas": [
+        {
+            "id": "1",
+            "nome": "Férias",
+            "valor": 5000.00,
+            "dataAlvo": "2026-07-01",
+            "ativo": true
+        },
+        {
+            "id": "2",
+            "nome": "Fundo de Emergência",
+            "valor": 10000.00,
+            "dataAlvo": "2026-12-31",
+            "ativo": true
+        },
+        {
+            "id": "3",
+            "nome": "Laptop novo",
+            "valor": 3500.99,
+            "dataAlvo": "2026-09-15",
+            "ativo": true
+        }
+    ]
+}

@@ -1,14 +1,101 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "./assets/logo.png";
 import "./App.css";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import type { Entrada, Saida, Meta, TipoItem, Modal } from "./types";
+import { ItemModal } from "./ItemModal";
+import { StatsSection } from "./StatsSection";
 
 function App() {
+  const [entradas, setEntradas] = useState<Entrada[]>([]);
+  const [saidas, setSaidas] = useState<Saida[]>([]);
+  const [metas, setMetas] = useState<Meta[]>([]);
+  const [modal, setModal] = useState<Modal>({
+    aberto: false,
+    tipo: "entrada",
+  });
+  const [itemEditando, setItemEditando] = useState<
+    Entrada | Saida | Meta | undefined
+  >();
+
+  // Carregar dados ao inicializar
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
+  const carregarDados = async () => {
+    try {
+      // Carregar do data.json (sempre para manter os dados mockados)
+      const response = await fetch("/data.json");
+      const dados = await response.json();
+      setEntradas(dados.entradas || []);
+      setSaidas(dados.saidas || []);
+      setMetas(dados.metas || []);
+    } catch (erro) {
+      console.error("Erro ao carregar dados:", erro);
+    }
+  };
+
+
+
+  const abrirModal = (tipo: TipoItem, item?: Entrada | Saida | Meta) => {
+    setModal({ aberto: true, tipo, itemId: item?.id });
+    setItemEditando(item);
+  };
+
+  const fecharModal = () => {
+    setModal({ aberto: false, tipo: "entrada" });
+    setItemEditando(undefined);
+  };
+
+  const salvarItem = (item: Entrada | Saida | Meta) => {
+    if (modal.tipo === "entrada") {
+      const entrada = item as Entrada;
+      const index = entradas.findIndex((e) => e.id === entrada.id);
+      if (index >= 0) {
+        const novasEntradas = [...entradas];
+        novasEntradas[index] = entrada;
+        setEntradas(novasEntradas);
+      } else {
+        setEntradas([...entradas, entrada]);
+      }
+    } else if (modal.tipo === "saida") {
+      const saida = item as Saida;
+      const index = saidas.findIndex((s) => s.id === saida.id);
+      if (index >= 0) {
+        const novasSaidas = [...saidas];
+        novasSaidas[index] = saida;
+        setSaidas(novasSaidas);
+      } else {
+        setSaidas([...saidas, saida]);
+      }
+    } else if (modal.tipo === "meta") {
+      const meta = item as Meta;
+      const index = metas.findIndex((m) => m.id === meta.id);
+      if (index >= 0) {
+        const novasMetas = [...metas];
+        novasMetas[index] = meta;
+        setMetas(novasMetas);
+      } else {
+        setMetas([...metas, meta]);
+      }
+    }
+  };
+
+  const deletarItem = (tipo: TipoItem, id: string) => {
+    if (window.confirm("Tem certeza que deseja deletar?")) {
+      if (tipo === "entrada") {
+        setEntradas(entradas.filter((e) => e.id !== id));
+      } else if (tipo === "saida") {
+        setSaidas(saidas.filter((s) => s.id !== id));
+      } else if (tipo === "meta") {
+        setMetas(metas.filter((m) => m.id !== id));
+      }
+    }
+  };
+
   return (
     <>
       <nav>
@@ -25,103 +112,47 @@ function App() {
       </section>
 
       <section id="stats" data-target="format_list_bulleted">
-        <div>
-          <h3>Entradas</h3>
-          <ul>
-            <li>
-              <span>Entrada1</span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
+        <StatsSection
+          titulo="Entradas"
+          tipo="entrada"
+          itens={entradas}
+          onEditar={(item) => abrirModal("entrada", item)}
+          onDeletar={(id) => deletarItem("entrada", id)}
+          onAdicionar={() => abrirModal("entrada")}
+        />
 
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-            <li>
-              <span className="nome">Entradaaaaaaaaaaaaaaaaaaa2</span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
+        <StatsSection
+          titulo="Saídas"
+          tipo="saida"
+          itens={saidas}
+          onEditar={(item) => abrirModal("saida", item)}
+          onDeletar={(id) => deletarItem("saida", id)}
+          onAdicionar={() => abrirModal("saida")}
+        />
 
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-          </ul>
-          <button className="add">
-            <AddRoundedIcon />
-          </button>
-        </div>
-
-        <div>
-          <h3>Saídas</h3>
-          <ul>
-            <li>
-              <span className="nome">Saída1</span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
-
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-            <li>
-              <span className="nome">
-                Saída222222222222222222222222222222222222222222
-              </span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
-
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-          </ul>
-          <button className="add">
-            <AddRoundedIcon />
-          </button>
-        </div>
-
-        <div>
-          <h3>Metas</h3>
-          <ul>
-            <li>
-              <span className="nome">Meta1</span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
-
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-            <li>
-              <span className="nome">Meta2</span>
-              <span className="valor">500,00/mes</span>
-              <span className="edit">
-                <EditRoundedIcon />
-
-                <DeleteRoundedIcon />
-              </span>
-              <span className="freq">dia 5 de todo mês</span>
-            </li>
-          </ul>
-          <button className="add">
-            <AddRoundedIcon />
-          </button>
-        </div>
+        <StatsSection
+          titulo="Metas"
+          tipo="meta"
+          itens={metas}
+          onEditar={(item) => abrirModal("meta", item)}
+          onDeletar={(id) => deletarItem("meta", id)}
+          onAdicionar={() => abrirModal("meta")}
+        />
       </section>
+
+      <ItemModal
+        aberto={modal.aberto}
+        tipo={modal.tipo}
+        item={itemEditando}
+        onSalvar={salvarItem}
+        onFechar={fecharModal}
+      />
+
       <footer>
         <ExitToAppRoundedIcon sx={{ color: "white" }} />
-
         <InsightsRoundedIcon sx={{ color: "white" }} />
-
         <FormatListBulletedRoundedIcon sx={{ color: "white" }} />
       </footer>
-      <script src="index.js"></script>
     </>
   );
 }
