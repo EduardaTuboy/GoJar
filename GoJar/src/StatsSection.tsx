@@ -51,15 +51,12 @@ export function StatsSection({
     };
 
     const getFrequenciaLabel = (item: Entrada | Saida | Meta): string => {
-        if (tipo === "meta") {
-            return "Meta";
-        }
         const entrada = item as Entrada | Saida | Meta;
         const frequenciaMap: Record<string, string> = {
-            diária: "Diária",
-            semanal: "Semanal",
-            mensal: "Mensal",
-            única: "Única",
+            diária: "/dia",
+            semanal: "/semana",
+            mensal: "/mês",
+            única: "uma vez",
         };
         return frequenciaMap[entrada.frequencia] || entrada.frequencia;
     };
