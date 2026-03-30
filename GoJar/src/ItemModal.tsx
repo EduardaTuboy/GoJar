@@ -53,7 +53,7 @@ export function ItemModal({
                 valorCentavos: 0,
                 frequencia: "mensal",
                 dia: 1,
-                dataAlvo: new Date().toISOString().split("T")[0],
+                dataUnica: new Date().toISOString().split("T")[0],
                 ativo: true,
             });
         }
@@ -193,6 +193,18 @@ export function ItemModal({
                                         )}
                                     </Select>
                                 </FormControl>
+                            )}
+
+                            {formData.frequencia === "única" && (
+                                <TextField
+                                    fullWidth
+                                    label="Data"
+                                    name="dataUnica"
+                                    type="date"
+                                    InputLabelProps={{ shrink: true }}
+                                    value={formData.dataUnica || ""}
+                                    onChange={handleChange}
+                                />
                             )}
                         </>
                     )}

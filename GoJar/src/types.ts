@@ -4,6 +4,7 @@ export interface Entrada {
     valor: number;
     frequencia: "mensal" | "semanal" | "diária" | "única";
     dia: number;
+    dataUnica?: string; // Data quando frequência for "única" (YYYY-MM-DD)
     ativo: boolean;
 }
 
@@ -13,6 +14,7 @@ export interface Saida {
     valor: number;
     frequencia: "mensal" | "semanal" | "diária" | "única";
     dia: number;
+    dataUnica?: string; // Data quando frequência for "única" (YYYY-MM-DD)
     ativo: boolean;
 }
 
@@ -22,6 +24,7 @@ export interface Meta {
     valor: number;
     frequencia: "mensal" | "semanal" | "diária" | "única";
     dia: number;
+    dataUnica?: string; // Data quando frequência for "única" (YYYY-MM-DD)
     ativo: boolean;
 }
 

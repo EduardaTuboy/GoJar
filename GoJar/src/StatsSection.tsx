@@ -39,6 +39,12 @@ export function StatsSection({
             return `Todo ${diasSemana[entrada.dia] || "dia"}`;
         } else if (entrada.frequencia === "mensal") {
             return `Dia ${entrada.dia} de cada mês`;
+        } else if (entrada.frequencia === "única") {
+            if (entrada.dataUnica) {
+                const data = new Date(entrada.dataUnica);
+                return `Data: ${data.toLocaleDateString("pt-BR")}`;
+            }
+            return "Uma única vez";
         } else {
             return "Uma única vez";
         }
