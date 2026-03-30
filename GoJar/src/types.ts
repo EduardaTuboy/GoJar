@@ -35,3 +35,28 @@ export interface Modal {
     tipo: TipoItem;
     itemId?: string;
 }
+
+export type Frequencia = "diária" | "semanal" | "mensal" | "anual" | "única";
+
+export interface ItemBase {
+    id: string;
+    nome: string;
+    valor: number;
+    frequencia: Frequencia;
+    ativo: boolean; // NOVO
+    dia?: number;
+    mes?: number; // NOVO: Usado para frequência anual
+    dataUnica?: string;
+    dataInicio?: string; // NOVO
+    dataFim?: string; // NOVO: Pode ser data YYYY-MM-DD ou "indeterminado"
+}
+
+export interface Entrada extends ItemBase { }
+export interface Saida extends ItemBase { }
+export interface Meta extends ItemBase { }
+
+export interface Modal {
+    aberto: boolean;
+    tipo: TipoItem;
+    itemId?: string;
+}

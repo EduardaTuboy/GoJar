@@ -7,6 +7,7 @@ import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBullete
 import type { Entrada, Saida, Meta, TipoItem, Modal } from "./types";
 import { ItemModal } from "./ItemModal";
 import { StatsSection } from "./StatsSection";
+import MeuGrafico from "./Grafico";
 
 function App() {
   const [entradas, setEntradas] = useState<Entrada[]>([]);
@@ -96,6 +97,16 @@ function App() {
     }
   };
 
+  const alternarAtivo = (tipo: TipoItem, id: string) => {
+    if (tipo === "entrada") {
+      setEntradas(entradas.map((e) => (e.id === id ? { ...e, ativo: !e.ativo } : e)));
+    } else if (tipo === "saida") {
+      setSaidas(saidas.map((s) => (s.id === id ? { ...s, ativo: !s.ativo } : s)));
+    } else if (tipo === "meta") {
+      setMetas(metas.map((m) => (m.id === id ? { ...m, ativo: !m.ativo } : m)));
+    }
+  };
+
   return (
     <>
       <nav>
@@ -109,6 +120,7 @@ function App() {
 
       <section id="graph" data-target="insights">
         <h2>Graph</h2>
+        <MeuGrafico />
       </section>
 
       <section id="stats" data-target="format_list_bulleted">
@@ -119,6 +131,7 @@ function App() {
           onEditar={(item) => abrirModal("entrada", item)}
           onDeletar={(id) => deletarItem("entrada", id)}
           onAdicionar={() => abrirModal("entrada")}
+          onToggleAtivo={(id) => alternarAtivo("entrada", id)} // NOVO
         />
 
         <StatsSection
@@ -128,6 +141,7 @@ function App() {
           onEditar={(item) => abrirModal("saida", item)}
           onDeletar={(id) => deletarItem("saida", id)}
           onAdicionar={() => abrirModal("saida")}
+          onToggleAtivo={(id) => alternarAtivo("saida", id)} // NOVO
         />
 
         <StatsSection
@@ -137,6 +151,7 @@ function App() {
           onEditar={(item) => abrirModal("meta", item)}
           onDeletar={(id) => deletarItem("meta", id)}
           onAdicionar={() => abrirModal("meta")}
+          onToggleAtivo={(id) => alternarAtivo("meta", id)} // NOVO
         />
       </section>
 
