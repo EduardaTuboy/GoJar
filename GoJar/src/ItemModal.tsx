@@ -84,7 +84,7 @@ export function ItemModal({
     const handleSelectChange = (name: string, value: string) => {
         setFormData({
             ...formData,
-            [name]: value,
+            [name]: name === "dia" ? parseInt(value, 10) : value,
         });
     };
 
@@ -132,7 +132,7 @@ export function ItemModal({
                         placeholder="0.00"
                     />
 
-                    {(tipo === "entrada" || tipo === "saida") && (
+                    {(tipo === "entrada" || tipo === "saida" || tipo === "meta") && (
                         <>
                             <FormControl fullWidth>
                                 <InputLabel>Frequência</InputLabel>
@@ -151,40 +151,50 @@ export function ItemModal({
                                 </Select>
                             </FormControl>
 
-                            {formData.frequencia !== "única" && (
-                                <TextField
-                                    fullWidth
-                                    label={
-                                        formData.frequencia === "semanal" ? "Dia da semana" : "Dia"
-                                    }
-                                    name="dia"
-                                    type="number"
-                                    inputProps={{
-                                        min: formData.frequencia === "semanal" ? 0 : 1,
-                                        max: formData.frequencia === "semanal" ? 6 : 31,
-                                    }}
-                                    value={formData.dia}
-                                    onChange={handleChange}
-                                    helperText={
-                                        formData.frequencia === "semanal"
-                                            ? "0=domingo, 6=sábado"
-                                            : "Dia do mês"
-                                    }
-                                />
+                            {formData.frequencia === "semanal" && (
+                                <FormControl fullWidth>
+                                    <InputLabel>Dia da Semana</InputLabel>
+                                    <Select
+                                        name="dia"
+                                        value={String(formData.dia)}
+                                        onChange={(e) =>
+                                            handleSelectChange("dia", e.target.value)
+                                        }
+                                        label="Dia da Semana"
+                                    >
+                                        <MenuItem value="0">Domingo</MenuItem>
+                                        <MenuItem value="1">Segunda</MenuItem>
+                                        <MenuItem value="2">Terça</MenuItem>
+                                        <MenuItem value="3">Quarta</MenuItem>
+                                        <MenuItem value="4">Quinta</MenuItem>
+                                        <MenuItem value="5">Sexta</MenuItem>
+                                        <MenuItem value="6">Sábado</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            )}
+
+                            {formData.frequencia === "mensal" && (
+                                <FormControl fullWidth>
+                                    <InputLabel>Dia do Mês</InputLabel>
+                                    <Select
+                                        name="dia"
+                                        value={String(formData.dia)}
+                                        onChange={(e) =>
+                                            handleSelectChange("dia", e.target.value)
+                                        }
+                                        label="Dia do Mês"
+                                    >
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(
+                                            (day) => (
+                                                <MenuItem key={day} value={String(day)}>
+                                                    {day}
+                                                </MenuItem>
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
                             )}
                         </>
-                    )}
-
-                    {tipo === "meta" && (
-                        <TextField
-                            fullWidth
-                            label="Data Alvo"
-                            name="dataAlvo"
-                            type="date"
-                            InputLabelProps={{ shrink: true }}
-                            value={formData.dataAlvo}
-                            onChange={handleChange}
-                        />
                     )}
                 </Stack>
             </DialogContent>

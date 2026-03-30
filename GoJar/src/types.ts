@@ -20,7 +20,8 @@ export interface Meta {
     id: string;
     nome: string;
     valor: number;
-    dataAlvo: string;
+    frequencia: "mensal" | "semanal" | "diária" | "única";
+    dia: number;
     ativo: boolean;
 }
 

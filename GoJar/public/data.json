@@ -72,21 +72,24 @@
             "id": "1",
             "nome": "Férias",
             "valor": 5000.00,
-            "dataAlvo": "2026-07-01",
+            "frequencia": "mensal",
+            "dia": 1,
             "ativo": true
         },
         {
             "id": "2",
             "nome": "Fundo de Emergência",
             "valor": 10000.00,
-            "dataAlvo": "2026-12-31",
+            "frequencia": "semanal",
+            "dia": 5,
             "ativo": true
         },
         {
             "id": "3",
             "nome": "Laptop novo",
             "valor": 3500.99,
-            "dataAlvo": "2026-09-15",
+            "frequencia": "mensal",
+            "dia": 15,
             "ativo": true
         }
     ]

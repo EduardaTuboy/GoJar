@@ -30,19 +30,13 @@ export function StatsSection({
     const getFrequenciaEspecifica = (
         item: Entrada | Saida | Meta
     ): string => {
-        if (tipo === "meta") {
-            const meta = item as Meta;
-            const data = new Date(meta.dataAlvo);
-            return `Alvo: ${data.toLocaleDateString("pt-BR")}`;
-        }
-
-        const entrada = item as Entrada | Saida;
+        const entrada = item as Entrada | Saida | Meta;
 
         if (entrada.frequencia === "diária") {
             return "Todo dia";
         } else if (entrada.frequencia === "semanal") {
             const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-            return `Todo ${diasSemana[entrada.dia] || "dia"} (${entrada.dia})`;
+            return `Todo ${diasSemana[entrada.dia] || "dia"}`;
         } else if (entrada.frequencia === "mensal") {
             return `Dia ${entrada.dia} de cada mês`;
         } else {
@@ -54,7 +48,7 @@ export function StatsSection({
         if (tipo === "meta") {
             return "Meta";
         }
-        const entrada = item as Entrada | Saida;
+        const entrada = item as Entrada | Saida | Meta;
         const frequenciaMap: Record<string, string> = {
             diária: "Diária",
             semanal: "Semanal",
