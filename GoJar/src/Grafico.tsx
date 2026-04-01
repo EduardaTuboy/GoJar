@@ -12,7 +12,7 @@ interface Evento {
     nome: string;
 }
 
-// Helper para criar datas consistentes (ignora fuso horário para evitar bugs de virada de dia)
+// Helpers para datas
 const parseDateLocal = (dateStr: string) => {
     const [y, m, d] = dateStr.split('-').map(Number);
     return new Date(y, m - 1, d);
@@ -20,22 +20,42 @@ const parseDateLocal = (dateStr: string) => {
 
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
 
+const formatDate = (date: Date) => date.toLocaleDateString('pt-BR');
+
 function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataInicio: Date, numMeses: number = 12): Evento[] {
     const eventos: Evento[] = [];
     const dataFim = new Date(dataInicio);
     dataFim.setMonth(dataFim.getMonth() + numMeses);
 
+    console.log(`\n============================================================`);
+    console.log(`🔍 [GERAR EVENTOS] Iniciando janela de projeção:`);
+    console.log(`   De:  ${formatDate(dataInicio)}`);
+    console.log(`   Até: ${formatDate(dataFim)} (${numMeses} meses)`);
+    console.log(`============================================================`);
+
     const processarLista = (lista: any[], tipoEvento: TipoEvento) => {
+        console.log(`\n📂 Processando lista de tipo: '${tipoEvento.toUpperCase()}' (${lista.length} itens)`);
+
         for (const item of lista) {
-            if (item.ativo === false) continue;
+            if (item.ativo === false) {
+                console.log(`  ⏭️ Ignorado (Inativo): ${item.nome}`);
+                continue;
+            }
 
             const frequencia = item.frequencia;
+            let eventosGeradosNesteItem = 0;
+
+            console.log(`  ⚙️ Item: ${item.nome} | Freq: ${frequencia}`);
 
             if (frequencia === "única") {
                 if (!item.dataUnica) continue;
                 const data = parseDateLocal(item.dataUnica);
                 if (data >= dataInicio && data <= dataFim) {
                     eventos.push({ tipo: tipoEvento, data, valor: item.valor, nome: item.nome });
+                    eventosGeradosNesteItem++;
+                    console.log(`     ✅ Agendado para ${formatDate(data)}`);
+                } else {
+                    console.log(`     ❌ Fora da janela: ${formatDate(data)}`);
                 }
                 continue;
             }
@@ -46,7 +66,12 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
             const janelaInicio = dataInicio > itemInicio ? dataInicio : itemInicio;
             const janelaFim = dataFim < itemFim ? dataFim : itemFim;
 
-            if (janelaInicio > janelaFim) continue;
+            if (janelaInicio > janelaFim) {
+                console.log(`     ❌ Janela incompatível (Início efetivo ${formatDate(janelaInicio)} > Fim ${formatDate(janelaFim)})`);
+                continue;
+            }
+
+            console.log(`     ⏱️ Janela efetiva de execução: ${formatDate(janelaInicio)} a ${formatDate(janelaFim)}`);
 
             if (frequencia === "mensal") {
                 let curAno = janelaInicio.getFullYear();
@@ -61,6 +86,7 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
 
                     if (dataEvento >= janelaInicio && dataEvento <= janelaFim) {
                         eventos.push({ tipo: tipoEvento, data: dataEvento, valor: item.valor, nome: item.nome });
+                        eventosGeradosNesteItem++;
                     }
                     curMes++;
                     if (curMes > 11) { curMes = 0; curAno++; }
@@ -75,6 +101,7 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                 while (dataEvento <= janelaFim) {
                     if (dataEvento >= janelaInicio) {
                         eventos.push({ tipo: tipoEvento, data: new Date(dataEvento), valor: item.valor, nome: item.nome });
+                        eventosGeradosNesteItem++;
                     }
                     dataEvento.setDate(dataEvento.getDate() + 7);
                 }
@@ -83,6 +110,7 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                 let dataEvento = new Date(janelaInicio);
                 while (dataEvento <= janelaFim) {
                     eventos.push({ tipo: tipoEvento, data: new Date(dataEvento), valor: item.valor, nome: item.nome });
+                    eventosGeradosNesteItem++;
                     dataEvento.setDate(dataEvento.getDate() + 1);
                 }
             }
@@ -97,10 +125,13 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                     if (dataEvento > janelaFim) break;
                     if (dataEvento >= janelaInicio) {
                         eventos.push({ tipo: tipoEvento, data: dataEvento, valor: item.valor, nome: item.nome });
+                        eventosGeradosNesteItem++;
                     }
                     curAno++;
                 }
             }
+
+            console.log(`     📊 Total de ocorrências geradas: ${eventosGeradosNesteItem}`);
         }
     };
 
@@ -108,20 +139,31 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
     processarLista(saidas, "saida");
     processarLista(metas, "meta");
 
-    // Ordenação: primeiro por data, em caso de empate, metas vêm primeiro.
-    return eventos.sort((a, b) => {
+    const eventosOrdenados = eventos.sort((a, b) => {
         if (a.data.getTime() !== b.data.getTime()) return a.data.getTime() - b.data.getTime();
         return (a.tipo === "meta" ? 0 : 1) - (b.tipo === "meta" ? 0 : 1);
     });
+
+    console.log(`\n✅ Total de eventos gerados e ordenados: ${eventosOrdenados.length}`);
+    return eventosOrdenados;
 }
 
 function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Evento[]) {
+    console.log(`\n============================================================`);
+    console.log(`💰 [CALCULAR PROJEÇÃO] Iniciando fluxo de caixa`);
+    console.log(`   Saldo Base: R$ ${saldoInicial.toFixed(2)} em ${formatDate(dataInicial)}`);
+    console.log(`============================================================`);
+
     const seriesProjecao: [number, number][] = [];
     const seriesMetas: [number, number][] = [];
 
     let metasAcumuladas = eventos
         .filter(e => e.tipo === "meta" && e.data < dataInicial)
         .reduce((sum, e) => sum + e.valor, 0);
+
+    if (metasAcumuladas > 0) {
+        console.log(`   🎯 Metas pré-acumuladas (antes do início): R$ ${metasAcumuladas.toFixed(2)}`);
+    }
 
     let saldoAtual = saldoInicial;
 
@@ -136,6 +178,10 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
         if (ev.tipo === "meta") metasAcumuladas += ev.valor;
         else if (ev.tipo === "entrada") saldoAtual += ev.valor;
         else if (ev.tipo === "saida") saldoAtual -= ev.valor;
+
+        const simbolo = ev.tipo === "entrada" ? "🟢" : ev.tipo === "saida" ? "🔴" : "🎯";
+        const sinal = ev.tipo === "entrada" ? "+" : ev.tipo === "saida" ? "-" : "+";
+        console.log(`🗓️ ${formatDate(ev.data)} | ${simbolo} [${ev.tipo.toUpperCase()}] ${ev.nome.padEnd(25)} | ${sinal} R$${ev.valor.toFixed(2).padEnd(7)} | Saldo: R$${saldoAtual.toFixed(2)} (Metas: R$${metasAcumuladas.toFixed(2)})`);
 
         seriesProjecao.push([ev.data.getTime(), saldoAtual]);
         seriesMetas.push([ev.data.getTime(), metasAcumuladas]);
@@ -161,6 +207,10 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
                 const excessoAteRecarga = Math.max(0, saldoAtual - custoFuturo - metaFuturaTotal);
                 const taxaDiariaAtiva = excessoAteRecarga / diasTotaisCiclo;
 
+                if (taxaDiariaAtiva > 0) {
+                    console.log(`   ⏳ [GAP] ${diasGap} dias sem eventos. Recarga em ${formatDate(dataRecarga)}. Custo/Metas no período: R$${(custoFuturo + metaFuturaTotal - metasAcumuladas).toFixed(2)}. Decréscimo diário: R$${taxaDiariaAtiva.toFixed(2)}`);
+                }
+
                 for (let dia = 1; dia < diasGap; dia++) {
                     const dataInterp = new Date(ev.data.getTime() + dia * 24 * 60 * 60 * 1000);
 
@@ -176,6 +226,7 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
         }
     }
 
+    console.log(`\n✅ Projeção concluída. Total de pontos na série: ${seriesProjecao.length}`);
     return { seriesProjecao, seriesMetas };
 }
 
@@ -192,12 +243,15 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
     useEffect(() => {
         if (!chartRef.current) return;
 
+        console.log(`\n🚀 [COMPONENTE] Iniciando renderização / atualização do MeuGrafico...`);
+
         // 1. O EXATO MOMENTO ATUAL
         const agoraTimestamp = new Date().getTime();
 
         // 2. Mapeia as mudanças de saldo usando o horário exato
         const datasHistorico = new Set<number>();
         saldos.forEach(conta => {
+            if (conta.ativo === false) return; // IGNORA SALDOS INATIVOS (OCULTOS)
             conta.historico.forEach(reg => {
                 datasHistorico.add(new Date(reg.data).getTime());
             });
@@ -205,7 +259,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
 
         let datasOrdenadas = Array.from(datasHistorico).sort((a, b) => a - b);
 
-        // Se a conta for nova, o marco zero é agora
         if (datasOrdenadas.length === 0) {
             datasOrdenadas = [agoraTimestamp];
         }
@@ -217,7 +270,13 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
         datasOrdenadas.forEach(timestamp => {
             let totalMomento = 0;
             saldos.forEach(conta => {
-                const registroValido = conta.historico.find(reg => new Date(reg.data).getTime() <= timestamp);
+                if (conta.ativo === false) return; // IGNORA SALDOS INATIVOS
+
+                // Garante que o histórico lido está ordenado do mais recente para o mais antigo
+                const historicoOrdenado = [...conta.historico].sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+
+                // Pega o primeiro registro válido (mais recente) que ocorreu antes ou no momento exato do timestamp
+                const registroValido = historicoOrdenado.find(reg => new Date(reg.data).getTime() <= timestamp);
                 if (registroValido) {
                     totalMomento += registroValido.valor;
                 }
@@ -226,21 +285,19 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
             saldoAtualTotal = totalMomento;
         });
 
-        // Conecta o final do histórico exatamente com o segundo atual
-        if (datasOrdenadas[datasOrdenadas.length - 1] < agoraTimestamp) {
-            seriesHistorico.push([agoraTimestamp, saldoAtualTotal]);
-        }
-
-        // 4. PROJEÇÃO (O Truque da Sincronização)
+        // 4. PROJEÇÃO (Ignorando o Histórico)
         const dataHoje = new Date();
-        dataHoje.setHours(0, 0, 0, 0); // O motor precisa da meia-noite para calcular contas recorrentes do dia
+        dataHoje.setHours(0, 0, 0, 0);
 
         const eventosGerados = gerarEventos(entradas, saidas, metas, dataHoje, 12);
-        const { seriesProjecao, seriesMetas } = calcularProjecao(dataHoje, saldoAtualTotal, eventosGerados);
 
-        // CORREÇÃO VISUAL: Forçamos o primeiro ponto do futuro a nascer EXATAMENTE de onde o histórico parou
+        // MUDANÇA 1: Passamos '0' em vez de 'saldoAtualTotal' como saldo inicial
+        const { seriesProjecao, seriesMetas } = calcularProjecao(dataHoje, 0, eventosGerados);
+
+        // CORREÇÃO VISUAL
         if (seriesProjecao.length > 0) {
-            seriesProjecao[0] = [agoraTimestamp, saldoAtualTotal];
+            // MUDANÇA 2: O ponto inicial da linha no gráfico também deve ser fixado em 0
+            seriesProjecao[0] = [agoraTimestamp, 0];
         }
         if (seriesMetas.length > 0) {
             seriesMetas[0] = [agoraTimestamp, seriesMetas[0][1]];
@@ -251,7 +308,7 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
             series: [
                 { name: 'Saldo Histórico', type: 'line', data: seriesHistorico },
                 { name: 'Metas Acumuladas', type: 'line', data: seriesMetas },
-                { name: 'Saldo Projetado', type: 'area', data: seriesProjecao }
+                { name: 'Saldo Projetado', type: 'line', data: seriesProjecao }
             ],
             chart: {
                 height: 350,
@@ -260,20 +317,19 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
                     enabled: true,
                     easing: 'easeinout',
                     speed: 800,
-                    dynamicAnimation: { enabled: true, speed: 350 } // Faz a linha subir fluidamente ao editar
+                    dynamicAnimation: { enabled: true, speed: 350 }
                 },
                 toolbar: { show: true },
                 zoom: { enabled: true },
                 fontFamily: 'Kadwa, serif',
             },
-            colors: ['#00002a', '#FF9800', '#96c7cf'],
+            colors: ['#01c02a', '#FF9800', '#2563d6'],
             stroke: {
                 curve: ['stepline', 'stepline', 'smooth'],
                 width: [3, 2, 4]
             },
             fill: {
-                type: ['solid', 'solid', 'gradient'],
-                gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 100] }
+                type: ['solid', 'solid', 'solid'],
             },
             legend: {
                 position: 'top',
@@ -320,10 +376,10 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
             }
         };
 
-        // 6. GARANTIA DE RE-RENDER: Limpa a "tela" antes de desenhar o gráfico atualizado
         chartRef.current.innerHTML = '';
         const chart = new ApexCharts(chartRef.current, options);
         chart.render();
+        console.log(`✅ Gráfico renderizado com sucesso no DOM.`);
 
         return () => { chart.destroy(); };
 

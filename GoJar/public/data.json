@@ -2,121 +2,92 @@
     "entradas": [
         {
             "id": "1",
-            "nome": "Salário",
-            "valor": 5000.50,
+            "nome": "Mesada pai e mãe",
+            "valor": 2600.00,
             "frequencia": "mensal",
             "dia": 5,
             "ativo": true
         },
         {
             "id": "2",
-            "nome": "Freelance",
-            "valor": 1250.75,
-            "frequencia": "mensal",
-            "dia": 15,
+            "nome": "Bônus Fim de Ano",
+            "valor": 2600.00,
+            "frequencia": "anual",
+            "dia": 5,
+            "mes": 12,
             "ativo": true
         },
         {
             "id": "3",
-            "nome": "Aluguel de Quarto",
-            "valor": 450.00,
+            "nome": "Projeto Temporário (Freela)",
+            "valor": 700.00,
             "frequencia": "mensal",
-            "dia": 10,
-            "ativo": true
-        },
-        {
-            "id": "4",
-            "nome": "Aluguel de Quarto",
-            "valor": 330.00,
-            "frequencia": "mensal",
-            "dia": 10,
-            "ativo": true
-        },
-        {
-            "id": "5",
-            "nome": "Bônus de Projeto",
-            "valor": 2000.00,
-            "frequencia": "única",
-            "dia": 0,
-            "dataUnica": "2026-04-30",
+            "dia": 6,
+            "dataInicio": "2026-05-01",
+            "dataFim": "2026-09-01",
             "ativo": true
         }
     ],
     "saidas": [
         {
             "id": "1",
-            "nome": "Aluguel",
-            "valor": 1500.00,
-            "frequencia": "mensal",
+            "nome": "Mercado",
+            "valor": 300.00,
+            "frequencia": "semanal",
             "dia": 1,
             "ativo": true
         },
         {
             "id": "2",
-            "nome": "Internet",
-            "valor": 99.90,
+            "nome": "Tim",
+            "valor": 56.00,
             "frequencia": "mensal",
-            "dia": 5,
+            "dia": 19,
             "ativo": true
         },
         {
             "id": "3",
-            "nome": "Supermercado",
-            "valor": 450.30,
-            "frequencia": "semanal",
-            "dia": 0,
+            "nome": "Comer fora",
+            "valor": 400.00,
+            "frequencia": "mensal",
+            "dia": 20,
             "ativo": true
         },
         {
             "id": "4",
-            "nome": "Café da Manhã",
-            "valor": 12.50,
-            "frequencia": "diária",
-            "dia": 0,
-            "ativo": true
-        },
-        {
-            "id": "5",
-            "nome": "Manutenção do Carro",
-            "valor": 350.00,
-            "frequencia": "única",
-            "dia": 0,
-            "dataUnica": "2026-04-15",
+            "nome": "Parcelas do Notebook",
+            "valor": 500.00,
+            "frequencia": "mensal",
+            "dia": 10,
+            "dataInicio": "2026-04-01",
+            "dataFim": "2026-08-15",
             "ativo": true
         }
     ],
     "metas": [
         {
             "id": "1",
-            "nome": "Férias",
-            "valor": 5000.00,
-            "frequencia": "mensal",
-            "dia": 1,
+            "nome": "Cofrinhos",
+            "valor": 60.00,
+            "frequencia": "única",
+            "dataUnica": "2026-02-01",
             "ativo": true
         },
         {
             "id": "2",
-            "nome": "Fundo de Emergência",
-            "valor": 10000.00,
-            "frequencia": "semanal",
-            "dia": 5,
-            "ativo": true
-        },
-        {
-            "id": "3",
-            "nome": "Laptop novo",
-            "valor": 3500.99,
-            "frequencia": "mensal",
-            "dia": 15,
-            "ativo": true
-        },
-        {
-            "id": "4",
-            "nome": "Viagem Especial",
-            "valor": 8000.00,
+            "nome": "MetaUnica",
+            "valor": 40,
             "frequencia": "única",
+            "dataUnica": "2026-06-01",
+            "ativo": true
+        },
+        {
+            "nome": "Desafio Semanal Poupança",
+            "valor": 50,
+            "frequencia": "semanal",
             "dia": 0,
-            "dataUnica": "2026-08-20",
+            "dataInicio": "2026-06-01",
+            "dataFim": "2027-01-01",
             "ativo": true
         }
     ]

@@ -61,6 +61,7 @@ export interface SaldoConta {
     id: string;
     nome: string;
     historico: RegistroSaldo[];
+    ativo?: boolean;
 }
 
 export interface Entrada extends ItemBase { }
