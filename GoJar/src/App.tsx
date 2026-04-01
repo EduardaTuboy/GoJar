@@ -3,16 +3,18 @@ import logo from "./assets/logo.png";
 import "./App.css";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
-import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
-import type { Entrada, Saida, Meta, TipoItem, Modal } from "./types";
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import type { Entrada, Saida, Meta, TipoItem, Modal, SaldoConta } from "./types";
 import { ItemModal } from "./ItemModal";
 import { StatsSection } from "./StatsSection";
+import { SaldosSection } from "./SaldosSection";
 import MeuGrafico from "./Grafico";
 
 function App() {
   const [entradas, setEntradas] = useState<Entrada[]>([]);
   const [saidas, setSaidas] = useState<Saida[]>([]);
   const [metas, setMetas] = useState<Meta[]>([]);
+  const [saldos, setSaldos] = useState<SaldoConta[]>([]);
   const [modal, setModal] = useState<Modal>({
     aberto: false,
     tipo: "entrada",
@@ -34,12 +36,11 @@ function App() {
       setEntradas(dados.entradas || []);
       setSaidas(dados.saidas || []);
       setMetas(dados.metas || []);
+      setSaldos(dados.saldos || []);
     } catch (erro) {
       console.error("Erro ao carregar dados:", erro);
     }
   };
-
-
 
   const abrirModal = (tipo: TipoItem, item?: Entrada | Saida | Meta) => {
     setModal({ aberto: true, tipo, itemId: item?.id });
@@ -113,17 +114,15 @@ function App() {
         <img src={logo} alt="Go Jar Logo" />
         <h1>GoJar</h1>
       </nav>
-
-      <section id="login" data-target="exit_to_app">
-        <h2>Login</h2>
-      </section>
-
+      <SaldosSection saldos={saldos} onAtualizarSaldos={setSaldos} />
       <section id="graph" data-target="insights">
-        <h2>Graph</h2>
-        <MeuGrafico />
+        <MeuGrafico entradas={entradas} saidas={saidas} metas={metas} saldos={saldos} />
       </section>
 
       <section id="stats" data-target="format_list_bulleted">
+
+
+
         <StatsSection
           titulo="Entradas"
           tipo="entrada"
@@ -166,7 +165,7 @@ function App() {
       <footer>
         <ExitToAppRoundedIcon sx={{ color: "white" }} />
         <InsightsRoundedIcon sx={{ color: "white" }} />
-        <FormatListBulletedRoundedIcon sx={{ color: "white" }} />
+        <HelpOutlineRoundedIcon sx={{ color: "white" }} />
       </footer>
     </>
   );

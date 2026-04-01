@@ -117,14 +117,14 @@ export function StatsSection({
                                     title="Editar"
                                     className="icon-btn"
                                 >
-                                    <EditRoundedIcon />
+                                    <EditRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onDeletar(item.id); }}
                                     title="Deletar"
                                     className="icon-btn delete"
                                 >
-                                    <DeleteRoundedIcon />
+                                    <DeleteRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />
                                 </button>
                             </span>
 

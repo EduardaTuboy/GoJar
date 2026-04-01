@@ -51,6 +51,18 @@ export interface ItemBase {
     dataFim?: string; // NOVO: Pode ser data YYYY-MM-DD ou "indeterminado"
 }
 
+export interface RegistroSaldo {
+    id: string;
+    valor: number;
+    data: string; // Data e hora no formato ISO
+}
+
+export interface SaldoConta {
+    id: string;
+    nome: string;
+    historico: RegistroSaldo[];
+}
+
 export interface Entrada extends ItemBase { }
 export interface Saida extends ItemBase { }
 export interface Meta extends ItemBase { }
