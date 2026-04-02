@@ -110,11 +110,16 @@ export function ItemModal({
             return;
         }
 
-        const novoItem = {
+        // Cria o item SEM o ID inicialmente
+        const novoItem: any = {
             ...formData,
             valor: converterCentavosReais(formData.valorCentavos),
-            id: item?.id || Date.now().toString(),
         };
+
+        // Só coloca o ID no objeto se ele realmente já existir (Modo Edição)
+        if (item?.id) {
+            novoItem.id = item.id;
+        }
 
         delete novoItem.valorCentavos;
 
@@ -129,7 +134,7 @@ export function ItemModal({
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                    <TextField fullWidth label="Nome" name="nome" value={formData.nome} onChange={handleChange} />
+                    <TextField autoFocus fullWidth label="Nome" name="nome" value={formData.nome} onChange={handleChange} />
                     <TextField
                         fullWidth
                         label="Valor (R$)"
@@ -149,7 +154,6 @@ export function ItemModal({
                             onChange={(e) => handleSelectChange("frequencia", e.target.value)}
                             label="Frequência"
                         >
-                            <MenuItem value="diária">Diária</MenuItem>
                             <MenuItem value="semanal">Semanal</MenuItem>
                             <MenuItem value="mensal">Mensal</MenuItem>
                             <MenuItem value="anual">Anual</MenuItem>

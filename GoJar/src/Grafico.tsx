@@ -27,25 +27,16 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
     const dataFim = new Date(dataInicio);
     dataFim.setMonth(dataFim.getMonth() + numMeses);
 
-    console.log(`\n============================================================`);
-    console.log(`🔍 [GERAR EVENTOS] Iniciando janela de projeção:`);
-    console.log(`   De:  ${formatDate(dataInicio)}`);
-    console.log(`   Até: ${formatDate(dataFim)} (${numMeses} meses)`);
-    console.log(`============================================================`);
 
     const processarLista = (lista: any[], tipoEvento: TipoEvento) => {
-        console.log(`\n📂 Processando lista de tipo: '${tipoEvento.toUpperCase()}' (${lista.length} itens)`);
 
         for (const item of lista) {
             if (item.ativo === false) {
-                console.log(`  ⏭️ Ignorado (Inativo): ${item.nome}`);
                 continue;
             }
 
             const frequencia = item.frequencia;
             let eventosGeradosNesteItem = 0;
-
-            console.log(`  ⚙️ Item: ${item.nome} | Freq: ${frequencia}`);
 
             if (frequencia === "única") {
                 if (!item.dataUnica) continue;
@@ -53,9 +44,7 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                 if (data >= dataInicio && data <= dataFim) {
                     eventos.push({ tipo: tipoEvento, data, valor: item.valor, nome: item.nome });
                     eventosGeradosNesteItem++;
-                    console.log(`     ✅ Agendado para ${formatDate(data)}`);
                 } else {
-                    console.log(`     ❌ Fora da janela: ${formatDate(data)}`);
                 }
                 continue;
             }
@@ -67,11 +56,8 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
             const janelaFim = dataFim < itemFim ? dataFim : itemFim;
 
             if (janelaInicio > janelaFim) {
-                console.log(`     ❌ Janela incompatível (Início efetivo ${formatDate(janelaInicio)} > Fim ${formatDate(janelaFim)})`);
                 continue;
             }
-
-            console.log(`     ⏱️ Janela efetiva de execução: ${formatDate(janelaInicio)} a ${formatDate(janelaFim)}`);
 
             if (frequencia === "mensal") {
                 let curAno = janelaInicio.getFullYear();
@@ -106,14 +92,6 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                     dataEvento.setDate(dataEvento.getDate() + 7);
                 }
             }
-            else if (frequencia === "diária") {
-                let dataEvento = new Date(janelaInicio);
-                while (dataEvento <= janelaFim) {
-                    eventos.push({ tipo: tipoEvento, data: new Date(dataEvento), valor: item.valor, nome: item.nome });
-                    eventosGeradosNesteItem++;
-                    dataEvento.setDate(dataEvento.getDate() + 1);
-                }
-            }
             else if (frequencia === "anual") {
                 let curAno = janelaInicio.getFullYear();
                 while (true) {
@@ -131,7 +109,6 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
                 }
             }
 
-            console.log(`     📊 Total de ocorrências geradas: ${eventosGeradosNesteItem}`);
         }
     };
 
@@ -144,15 +121,10 @@ function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataI
         return (a.tipo === "meta" ? 0 : 1) - (b.tipo === "meta" ? 0 : 1);
     });
 
-    console.log(`\n✅ Total de eventos gerados e ordenados: ${eventosOrdenados.length}`);
     return eventosOrdenados;
 }
 
 function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Evento[]) {
-    console.log(`\n============================================================`);
-    console.log(`💰 [CALCULAR PROJEÇÃO] Iniciando fluxo de caixa`);
-    console.log(`   Saldo Base: R$ ${saldoInicial.toFixed(2)} em ${formatDate(dataInicial)}`);
-    console.log(`============================================================`);
 
     const seriesProjecao: [number, number][] = [];
     const seriesMetas: [number, number][] = [];
@@ -160,10 +132,6 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
     let metasAcumuladas = eventos
         .filter(e => e.tipo === "meta" && e.data < dataInicial)
         .reduce((sum, e) => sum + e.valor, 0);
-
-    if (metasAcumuladas > 0) {
-        console.log(`   🎯 Metas pré-acumuladas (antes do início): R$ ${metasAcumuladas.toFixed(2)}`);
-    }
 
     let saldoAtual = saldoInicial;
 
@@ -181,7 +149,6 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
 
         const simbolo = ev.tipo === "entrada" ? "🟢" : ev.tipo === "saida" ? "🔴" : "🎯";
         const sinal = ev.tipo === "entrada" ? "+" : ev.tipo === "saida" ? "-" : "+";
-        console.log(`🗓️ ${formatDate(ev.data)} | ${simbolo} [${ev.tipo.toUpperCase()}] ${ev.nome.padEnd(25)} | ${sinal} R$${ev.valor.toFixed(2).padEnd(7)} | Saldo: R$${saldoAtual.toFixed(2)} (Metas: R$${metasAcumuladas.toFixed(2)})`);
 
         seriesProjecao.push([ev.data.getTime(), saldoAtual]);
         seriesMetas.push([ev.data.getTime(), metasAcumuladas]);
@@ -207,10 +174,6 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
                 const excessoAteRecarga = Math.max(0, saldoAtual - custoFuturo - metaFuturaTotal);
                 const taxaDiariaAtiva = excessoAteRecarga / diasTotaisCiclo;
 
-                if (taxaDiariaAtiva > 0) {
-                    console.log(`   ⏳ [GAP] ${diasGap} dias sem eventos. Recarga em ${formatDate(dataRecarga)}. Custo/Metas no período: R$${(custoFuturo + metaFuturaTotal - metasAcumuladas).toFixed(2)}. Decréscimo diário: R$${taxaDiariaAtiva.toFixed(2)}`);
-                }
-
                 for (let dia = 1; dia < diasGap; dia++) {
                     const dataInterp = new Date(ev.data.getTime() + dia * 24 * 60 * 60 * 1000);
 
@@ -226,7 +189,6 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
         }
     }
 
-    console.log(`\n✅ Projeção concluída. Total de pontos na série: ${seriesProjecao.length}`);
     return { seriesProjecao, seriesMetas };
 }
 
@@ -242,8 +204,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
 
     useEffect(() => {
         if (!chartRef.current) return;
-
-        console.log(`\n🚀 [COMPONENTE] Iniciando renderização / atualização do MeuGrafico...`);
 
         // 1. O EXATO MOMENTO ATUAL
         const agoraTimestamp = new Date().getTime();
@@ -304,6 +264,7 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
         }
 
         // 5. Opções do Gráfico
+        // 5. Opções do Gráfico
         const options: ApexOptions = {
             series: [
                 { name: 'Saldo Histórico', type: 'line', data: seriesHistorico },
@@ -343,22 +304,26 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
                 tooltip: { enabled: false }
             },
             yaxis: {
-                floating: true,
+                floating: false, // Mudado para false: os números agora ficam fora da área das linhas do gráfico
                 title: { text: undefined },
                 labels: {
-                    style: { fontSize: '12px', fontWeight: 'bold' },
-                    offsetX: -10,
+                    style: { fontSize: '11px', fontWeight: 'bold' }, // Fonte um pouquinho menor pra caber bem
+                    offsetX: 0, // Resetado o deslocamento para não encavalar
                     formatter: (value) => {
+                        if (value === undefined || value === null) return "";
                         const val = Math.abs(value);
-                        if (val >= 1000000) return `R$ ${(value / 1000000).toFixed(1)}M`;
-                        if (val >= 1000) return `R$ ${(value / 1000).toFixed(0)}k`;
-                        return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+                        const sign = value < 0 ? "-" : "";
+                        // Formata compactado: ex: R$ 1.5M, R$ 5k, R$ 500
+                        if (val >= 1000000) return `${sign}R$ ${(val / 1000000).toFixed(1)}M`;
+                        if (val >= 1000) return `${sign}R$ ${(val / 1000).toFixed(1).replace('.0', '')}k`;
+                        return `${sign}R$ ${val.toFixed(0)}`;
                     }
                 }
             },
             grid: {
-                borderColor: '#e7e7e7', strokeDashArray: 4,
-                padding: { left: 0, right: 0 }
+                borderColor: '#e7e7e7',
+                strokeDashArray: 4,
+                // O padding lateral foi removido para o ApexCharts dar o espaçamento automático ideal para os R$
             },
             markers: { size: [0, 0, 0] },
             tooltip: {
@@ -379,7 +344,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
         chartRef.current.innerHTML = '';
         const chart = new ApexCharts(chartRef.current, options);
         chart.render();
-        console.log(`✅ Gráfico renderizado com sucesso no DOM.`);
 
         return () => { chart.destroy(); };
 

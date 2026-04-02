@@ -33,10 +33,7 @@ export function StatsSection({
         const i = item as Entrada | Saida | Meta;
         let freqStr = "";
 
-        // Lógica base da frequência
-        if (i.frequencia === "diária") {
-            freqStr = "Todo dia";
-        } else if (i.frequencia === "semanal") {
+        if (i.frequencia === "semanal") {
             const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
             freqStr = `Todo(a) ${diasSemana[i.dia || 0] || "dia"}`;
         } else if (i.frequencia === "mensal") {
@@ -113,14 +110,14 @@ export function StatsSection({
                             <span className="edit">
                                 <button
                                     // O e.stopPropagation() impede que o clique no botão ative o onClick do <li>
-                                    onClick={(e) => { e.stopPropagation(); onEditar(item); }}
+                                    onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onEditar(item); }}
                                     title="Editar"
                                     className="icon-btn"
                                 >
                                     <EditRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />
                                 </button>
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); onDeletar(item.id); }}
+                                    onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onDeletar(item.id); }}
                                     title="Deletar"
                                     className="icon-btn delete"
                                 >
@@ -135,7 +132,10 @@ export function StatsSection({
                     ))
                 )}
             </ul>
-            <button className="add" onClick={onAdicionar} title={`Adicionar ${tipo}`}>
+            <button className="add" onClick={(e) => {
+                e.currentTarget.blur();
+                onAdicionar();
+            }} title={`Adicionar ${tipo}`}>
                 <AddRoundedIcon />
             </button>
         </div>

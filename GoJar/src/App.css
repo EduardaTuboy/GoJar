@@ -59,9 +59,13 @@ footer {
   z-index: 100;
 }
 
+#stats {
+  margin-bottom: 120px;
+}
+
 .stats-section {
   position: relative;
-  margin: 50px 20px 80px;
+  margin: 50px 20px;
 }
 
 .stats-section h3 {
@@ -282,7 +286,7 @@ footer {
 }
 
 .btn-salvar {
-  padding: 4px 20px;
+  padding: 1.5px 15px;
   border-radius: 20px;
   border: 3px solid var(--text);
   background-color: white;

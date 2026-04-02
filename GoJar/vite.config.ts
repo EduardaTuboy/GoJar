@@ -10,5 +10,11 @@ export default defineConfig({
   ],
   optimizeDeps: {
     include: ['apexcharts', 'react-apexcharts']
-  }
+  },
+  server: {
+    // Adicione esta parte de headers:
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin-allow-popups"
+    }
+  },
 })

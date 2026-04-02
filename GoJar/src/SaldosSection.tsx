@@ -3,8 +3,6 @@ import type { SaldoConta, RegistroSaldo } from "./types";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
-import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import {
     Dialog,
     DialogTitle,
@@ -13,7 +11,7 @@ import {
     Button,
     TextField,
     IconButton,
-    DialogContentText // Adicionado para o texto do modal de exclusão
+    DialogContentText
 } from "@mui/material";
 
 // IMPORTAÇÕES DOS UTILITÁRIOS MONETÁRIOS
@@ -23,6 +21,11 @@ import {
     converterReaisCentavos,
     converterCentavosReais,
 } from "./utils/monetario";
+
+interface SaldosSectionProps {
+    saldos: SaldoConta[];
+    onAtualizarSaldos: (saldos: SaldoConta[]) => void;
+}
 
 // Helpers para lidar com o input de data nativo que usa horário local
 const formatToLocalDatetime = (isoStr: string) => {
@@ -173,7 +176,17 @@ export function SaldosSection({ saldos, onAtualizarSaldos }: SaldosSectionProps)
                             const inativo = conta.ativo === false;
 
                             return (
-                                <li key={conta.id} style={{ opacity: inativo ? 0.6 : 1, transition: 'opacity 0.2s' }}>
+                                <li
+                                    key={conta.id}
+                                    onClick={() => toggleVisibility(conta.id)}
+                                    style={{
+                                        cursor: "pointer",
+                                        opacity: inativo ? 0.45 : 1,
+                                        filter: inativo ? "grayscale(100%)" : "none",
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                    title={inativo ? "Clique para mostrar no gráfico" : "Clique para ocultar do gráfico"}
+                                >
                                     <div className="saldo-header">{conta.nome} {inativo && "(Oculto)"}</div>
                                     <div className="saldo-row">
                                         {isEditing ? (
@@ -182,26 +195,43 @@ export function SaldosSection({ saldos, onAtualizarSaldos }: SaldosSectionProps)
                                                 inputMode="numeric"
                                                 className="saldo-input edit-mode"
                                                 value={formatarCentavosParaExibicao(editando[conta.id])}
+                                                onClick={(e) => e.stopPropagation()} // Impede o clique de desativar o item
                                                 onChange={(e) => handleChange(conta.id, e.target.value)}
                                                 autoFocus
                                             />
                                         ) : (
                                             <div
                                                 className="saldo-input read-mode"
-                                                onClick={() => handleEditClick(conta.id, ultimoRegistro.valor)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Impede o clique de desativar o item
+                                                    handleEditClick(conta.id, ultimoRegistro.valor);
+                                                }}
                                             >
                                                 {formatarMoeda(ultimoRegistro.valor)}
                                             </div>
                                         )}
 
                                         <span className="edit">
-                                            <button className="icon-btn" onClick={() => toggleVisibility(conta.id)} title={inativo ? "Mostrar no Gráfico" : "Ocultar do Gráfico"}>
-                                                {inativo ? <VisibilityOffRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} /> : <VisibilityRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />}
-                                            </button>
-                                            <button className="icon-btn" onClick={() => setEditingConta(conta)} title="Editar Conta e Histórico">
+                                            <button
+                                                className="icon-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.currentTarget.blur();
+                                                    setEditingConta(conta);
+                                                }}
+                                                title="Editar Conta e Histórico"
+                                            >
                                                 <EditRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />
                                             </button>
-                                            <button className="icon-btn delete" onClick={() => handleAbrirDeleteModal(conta.id)} title="Deletar">
+                                            <button
+                                                className="icon-btn delete"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.currentTarget.blur();
+                                                    handleAbrirDeleteModal(conta.id);
+                                                }}
+                                                title="Deletar"
+                                            >
                                                 <DeleteRoundedIcon sx={{ fontSize: "clamp(20px, 4vw, 30px)" }} />
                                             </button>
                                         </span>
@@ -223,7 +253,10 @@ export function SaldosSection({ saldos, onAtualizarSaldos }: SaldosSectionProps)
                     >
                         Salvar
                     </button>
-                    <button className="add" onClick={handleAbrirAddModal} title="Adicionar Saldo">
+                    <button className="add" onClick={(e) => {
+                        e.currentTarget.blur();
+                        handleAbrirAddModal();
+                    }} title="Adicionar Saldo">
                         <AddRoundedIcon />
                     </button>
                 </div>
