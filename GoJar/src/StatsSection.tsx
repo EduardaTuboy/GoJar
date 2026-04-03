@@ -31,17 +31,18 @@ export function StatsSection({
 
     const getFrequenciaEspecifica = (item: Entrada | Saida | Meta): string => {
         const i = item as Entrada | Saida | Meta;
+        const frequenciaStr = String(i.frequencia); // <-- FORÇAMOS PARA STRING AQUI
         let freqStr = "";
 
-        if (i.frequencia === "semanal") {
+        if (frequenciaStr === "semanal") {
             const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
             freqStr = `Todo(a) ${diasSemana[i.dia || 0] || "dia"}`;
-        } else if (i.frequencia === "mensal") {
+        } else if (frequenciaStr === "mensal") {
             freqStr = `Dia ${i.dia} de cada mês`;
-        } else if (i.frequencia === "anual") {
+        } else if (frequenciaStr === "anual") {
             const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
             freqStr = `Todo dia ${i.dia} de ${meses[(i.mes || 1) - 1]}`;
-        } else if (i.frequencia === "única") {
+        } else if (frequenciaStr === "única") {
             if (i.dataUnica) {
                 const data = new Date(i.dataUnica);
                 return `Data: ${data.toLocaleDateString("pt-BR")}`;
@@ -73,7 +74,6 @@ export function StatsSection({
     const getFrequenciaLabel = (item: Entrada | Saida | Meta): string => {
         const i = item as Entrada | Saida | Meta;
         const frequenciaMap: Record<string, string> = {
-            diária: "/dia",
             semanal: "/semana",
             mensal: "/mês",
             anual: "/ano",

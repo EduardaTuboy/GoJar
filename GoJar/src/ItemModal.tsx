@@ -13,7 +13,6 @@ import {
     Stack,
     FormControlLabel,
     Checkbox,
-    Switch,
 } from "@mui/material";
 import type { Entrada, Saida, Meta, TipoItem } from "./types";
 import {

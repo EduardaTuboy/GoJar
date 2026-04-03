@@ -33,7 +33,7 @@ export function About() {
 
             <section style={{ marginBottom: "100px" }}>
                 <h3>Versão</h3>
-                <p>GoJar v1.0.0</p>
+                <p>GoJar v1.0.1</p>
             </section>
         </div>
     );

@@ -15,19 +15,16 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
     const location = useLocation();
-    const navigate = useNavigate(); // 3. Inicializado o navigate
-
     const isAuthPage = location.pathname === "/auth";
 
-    // 4. Função que desloga e redireciona
+    // Função que realmente desloga o usuário no Firebase
     const handleLogout = async () => {
         try {
-            await signOut(auth); // Encerra a sessão no Firebase
-            navigate("/auth");   // Joga o usuário para a tela de login
-            console.log("Logout realizado com sucesso!");
+            await signOut(auth);
+            // Ao rodar isso, o Firebase avisa o App.tsx que o usuário deslogou
+            // e o próprio App.tsx vai redirecionar a tela para /auth!
         } catch (error) {
             console.error("Erro ao fazer logout:", error);
-            alert("Erro ao tentar sair da conta.");
         }
     };
 

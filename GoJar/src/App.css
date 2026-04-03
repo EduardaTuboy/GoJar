@@ -21,8 +21,8 @@ body {
 }
 
 nav>img {
-  height: 80px;
-  max-height: 200px;
+  height: 120px;
+  width: 120px;
   object-fit: contain;
   margin: 20px 10px;
 }
@@ -39,7 +39,7 @@ nav {
 
 nav>h1 {
   font-weight: 500;
-  font-size: clamp(24px, 7vw, 45px);
+  font-size: clamp(24px, 9vw, 45px);
   color: var(--text);
 }
 

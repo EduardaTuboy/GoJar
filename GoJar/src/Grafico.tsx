@@ -20,8 +20,6 @@ const parseDateLocal = (dateStr: string) => {
 
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
 
-const formatDate = (date: Date) => date.toLocaleDateString('pt-BR');
-
 function gerarEventos(entradas: Entrada[], saidas: Saida[], metas: Meta[], dataInicio: Date, numMeses: number = 12): Evento[] {
     const eventos: Evento[] = [];
     const dataFim = new Date(dataInicio);
@@ -147,9 +145,6 @@ function calcularProjecao(dataInicial: Date, saldoInicial: number, eventos: Even
         else if (ev.tipo === "entrada") saldoAtual += ev.valor;
         else if (ev.tipo === "saida") saldoAtual -= ev.valor;
 
-        const simbolo = ev.tipo === "entrada" ? "🟢" : ev.tipo === "saida" ? "🔴" : "🎯";
-        const sinal = ev.tipo === "entrada" ? "+" : ev.tipo === "saida" ? "-" : "+";
-
         seriesProjecao.push([ev.data.getTime(), saldoAtual]);
         seriesMetas.push([ev.data.getTime(), metasAcumuladas]);
 
@@ -224,7 +219,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
         }
 
         const seriesHistorico: [number, number][] = [];
-        let saldoAtualTotal = 0;
 
         // 3. Monta a linha do passado até o presente
         datasOrdenadas.forEach(timestamp => {
@@ -242,7 +236,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
                 }
             });
             seriesHistorico.push([timestamp, totalMomento]);
-            saldoAtualTotal = totalMomento;
         });
 
         // 4. PROJEÇÃO (Ignorando o Histórico)
@@ -276,7 +269,6 @@ const MeuGrafico: React.FC<GraficoProps> = ({ entradas, saidas, metas, saldos })
                 type: 'line',
                 animations: {
                     enabled: true,
-                    easing: 'easeinout',
                     speed: 800,
                     dynamicAnimation: { enabled: true, speed: 350 }
                 },
